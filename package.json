@@ -1,0 +1,24 @@
+{
+  "name": "fullstack-project-8",
+  "version": "1.0.0",
+  "description": "SQL Library Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/realjhoo/fullstack-project-8.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/realjhoo/fullstack-project-8/issues"
+  },
+  "homepage": "https://github.com/realjhoo/fullstack-project-8#readme"
+}
