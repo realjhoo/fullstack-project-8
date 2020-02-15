@@ -1,12 +1,38 @@
+"use strict";
+// REQUIRES
 const express = require("express");
-// const routes = require("./routes/index");
+const db = require("./db");
+const Book = require("./db/models/book").Book;
+const router = express.Router();
+
+// VARS
 const app = express();
 let books = [];
 
+// app
 app.set("view engine", "pug");
 app.use("/static", express.static("public"));
 
-// app.use(routes);
+// connect to db
+(async () => {
+  await db.sequelize.sync();
+  try {
+    await db.sequelize.authenticate();
+    console.log("Connected to database...");
+  } catch (error) {
+    console.log("Error " + error);
+  }
+})();
+
+// app.get(
+//   "/",
+//   asyncHandler(async (req, res) => {
+//     const books = await Book.findAll({
+//       order: [["title", "ASC"]]
+//     });
+//     res.render("index", { books: books });
+//   })
+// );
 
 // root rout = /books
 app.get("/", (req, res) => {
@@ -60,9 +86,10 @@ app.get("/books/update", (req, res) => {
 
 // where id is the db id
 // get /books/:id
-app.get("/books/:id", (req, res) => {
-  res.render("new-book");
-});
+// app.get("/books/:id", (req, res) => {
+//   // const book = await Book.findByPk(req.params.id);
+//   res.render("new-book", { title: book });
+// });
 
 // post /books/:id
 // app.post("/books/:id", (req, res) => {
@@ -73,6 +100,19 @@ app.get("/books/:id", (req, res) => {
 // app.get("/books/:id", (req, res) => {
 //   res.render("books/:id/delete");
 // });
+
+// testing route
+app.get(
+  "/books/:id",
+  asyncHandler(async (req, res) => {
+    const book = await Book.findByPk(req.params.id);
+    if (book) {
+      res.render("update-book");
+    } else {
+      res.sendStatus(404);
+    }
+  })
+);
 
 // /error
 // app.get("/error", (req, res) => {
@@ -110,4 +150,16 @@ function showTime() {
   seconds = seconds < 10 ? "0" + seconds : seconds;
   let timeStamp = hour + ":" + minutes + ":" + seconds;
   return timeStamp;
+}
+
+// ========================================================
+/* Handler function to wrap each route. */
+function asyncHandler(cb) {
+  return async (req, res, next) => {
+    try {
+      await cb(req, res, next);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  };
 }
