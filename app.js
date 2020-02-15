@@ -105,10 +105,14 @@ app.get("/books/update", (req, res) => {
 app.get(
   "/books/:id",
   asyncHandler(async (req, res) => {
+    console.log("* * * This route is working * * *");
     const book = await Book.findByPk(req.params.id);
+    console.log("BOOK BOOK BOOK BOOK " + book);
     if (book) {
       res.render("update-book");
+      console.log("We got this far.");
     } else {
+      console.log("Nope, didnt work");
       res.sendStatus(404);
     }
   })
