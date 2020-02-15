@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1 Update Book
+  form(method="post" action="")
+    p
+      label(for="title") Title
+      input(name="title" type="text" id="title" value="Random Book Title")
+    p
+      label(for="author" ) Author
+      input(name="author" type="text" id="author" value="Petey Jones III")
+    p 
+      label(for="genre") Genre
+      input(name="title" type="text" id="title" value="Boring Fiction")
+    p 
+      label(for="year") Year
+      input(name="title" type="text" id="title" value="2270")
+    p
+      input(type="submit" value="Update Book")
+  form(action="/", method="post", onsubmit="return confirm('Delete? Really?');")
+    p
+      a.button(href="all-books.html") Cancel
+    input(type="submit" value="Delete Book")
+    br
+    br
+    h5 this is update-book.pug

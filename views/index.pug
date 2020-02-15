@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1 Books
+  p 
+    a.button(href="/books/new") Create New Book
+    table
+      thead 
+        th Title
+        th Author 
+        th Genre 
+        th Year 
+      tbody 
+      each val, id in books
+        tr  
+          td 
+            a(href="/books/update") #{books[id].title}
+          td #{books[id].author}
+          td #{books[id].genre}
+          td #{books[id].year_published}

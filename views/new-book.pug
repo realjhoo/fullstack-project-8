@@ -1,0 +1,27 @@
+extends layout
+block content
+//- Conditional to show error when there is a problem
+//-  (true === true) ? h1 wooo ? h2 no
+block content
+
+  h1 New Book
+ 
+  form(method="post" action="")
+    p
+      label(for="title") Title
+      input
+    p
+      label(for="author") Author
+      input
+    p 
+      label(for="genre") Genre
+      input
+    p 
+      label(for="year") Year
+      input
+    p
+      input(type="submit" value="Create New Book")
+    a.button(href="/") Cancel
+    br
+    br
+    h5 this is new-book.pug

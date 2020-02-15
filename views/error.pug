@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 ¯\_(ツ)_/¯
+  h1= error.message
+  h4 We looked everywhere, but no... we suspect user error, tbh
+  .error
+    h2 Error #{error.status} - File Not Found
+    pre Try the back button... that usually helps.
+    pre= error.stack
+  a.button(href="/") Home
+  h5 This message brought to you by error.pug
