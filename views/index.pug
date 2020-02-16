@@ -14,7 +14,7 @@ block content
       each val, id in books
         tr  
           td 
-            a(href="/books/update") #{books[id].title}
+            a(href="/books/"+(id+1)) #{books[id].title}
           td #{books[id].author}
           td #{books[id].genre}
-          td #{books[id].year_published}
+          td #{books[id].year}

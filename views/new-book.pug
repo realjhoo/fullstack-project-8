@@ -1,11 +1,9 @@
 extends layout
-block content
-//- Conditional to show error when there is a problem
-//-  (true === true) ? h1 wooo ? h2 no
-block content
 
+block content
   h1 New Book
- 
+
+  //- form action needed to write to db
   form(method="post" action="")
     p
       label(for="title") Title
