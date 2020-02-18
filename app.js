@@ -70,9 +70,12 @@ app.post(
   "/books/:id",
   asyncHandler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
-    await book.update({ title: "New Title, Bitch" });
+    // this line doesnt work
+    const x = await book.update(req.body);
+    // this line works
+    // const x = await book.update({ title: "Emma" });
     res.redirect("/books/" + book.id);
-    // res.send(req.body);
+    // res.send(x);
   })
 );
 
