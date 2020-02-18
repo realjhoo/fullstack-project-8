@@ -46,13 +46,13 @@ app.get(
 //   res.redirect("/");
 // });
 
-// NEW BOOKS
+// New Book
 // works
 app.get("/books/new", (req, res) => {
   res.render("new-book", { title: "New Book" });
 });
 
-// Update Book
+// Update Book (get from database)
 app.get(
   "/books/:id",
   asyncHandler(async (req, res) => {
@@ -64,6 +64,19 @@ app.get(
     }
   })
 );
+
+// Update Book (Write to database)
+app.post(
+  "/books/:id",
+  asyncHandler(async (req, res) => {
+    const book = await Book.findByPk(req.params.id);
+    await book.update({ title: "New Title, Bitch" });
+    res.redirect("/books/" + book.id);
+    // res.send(req.body);
+  })
+);
+
+// Delete Book (Delete from database)
 
 // =============== error handler ===============
 // set error
