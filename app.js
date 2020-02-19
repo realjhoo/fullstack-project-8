@@ -10,6 +10,7 @@ const app = express();
 // app set and use
 app.set("view engine", "pug");
 app.use("/static", express.static("public"));
+app.use(express.urlencoded({ extended: false }));
 
 // connect to db
 (async () => {
@@ -51,6 +52,22 @@ app.get(
 app.get("/books/new", (req, res) => {
   res.render("new-book", { title: "New Book" });
 });
+
+app.post(
+  "/books/new",
+  asyncHandler(async (req, res) => {
+    const book = await Book.create(req.body);
+    res.render("new-book", { title: book.title });
+    res.render("/", { title: "SQL Library Manager" });
+    // res.redirect("/books/new");
+    // res.send("It worked!");
+    // What should happen after successful creation of a book? Return home?
+  })
+);
+
+// app.get("/books/submit", (req, res) => {
+//   res.redirect("books/new", { title: book.title });
+// });
 
 // Update Book (get from database)
 app.get(
