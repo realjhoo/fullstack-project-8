@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1 Update Book
+  h1 Update Book 
   form(action="/books/" + book.id, method="post")
     p
       label(for="title") Title
@@ -19,7 +19,7 @@ block content
       input(type="submit" value="Update Book")
 
       //- ================ DELETE ===============
-  form(action="/", method="post", onsubmit="return confirm('Delete? Really?');")
+  form(action="/books/" + book.id + "/delete", method="post", onsubmit="return confirm('Delete? Really?');")
     p
       a.button(href="/") Cancel
     input(type="submit" value="Delete Book")

@@ -104,3 +104,4 @@ dist
 .tern-port
 .DS_Store
 routes/untitled
+library copy 2.db

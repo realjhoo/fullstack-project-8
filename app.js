@@ -4,7 +4,7 @@ const express = require("express");
 const db = require("./db");
 const { Book } = require("./db").models;
 
-// VARS
+// Variables and Constants
 const app = express();
 
 // app set and use
@@ -12,7 +12,7 @@ app.set("view engine", "pug");
 app.use("/static", express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 
-// connect to db
+// =============== Connect to DB ===============
 (async () => {
   await db.sequelize.sync();
   try {
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 })();
 
 // =============== ROUTES ===============
-// works
+// Home Route (Root) * * Working * *
 app.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -41,35 +41,26 @@ app.get(
   })
 );
 
-// redirect (needed?)
-// works
-// app.get("/books", (req, res) => {
-//   res.redirect("/");
-// });
+// Redirect /books -> /
+app.get("/books", (req, res) => {
+  res.redirect("/");
+});
 
-// New Book
-// works
+// New Book Route * * Working * *
 app.get("/books/new", (req, res) => {
   res.render("new-book", { title: "New Book" });
 });
 
+// Write new book to DB * * Working * *
 app.post(
   "/books/new",
   asyncHandler(async (req, res) => {
     const book = await Book.create(req.body);
-    res.render("new-book", { title: book.title });
-    res.render("/", { title: "SQL Library Manager" });
-    // res.redirect("/books/new");
-    // res.send("It worked!");
-    // What should happen after successful creation of a book? Return home?
+    res.redirect("/");
   })
 );
 
-// app.get("/books/submit", (req, res) => {
-//   res.redirect("books/new", { title: book.title });
-// });
-
-// Update Book (get from database)
+// Update Book (get from database) * * Working * *
 app.get(
   "/books/:id",
   asyncHandler(async (req, res) => {
@@ -77,41 +68,45 @@ app.get(
     if (book) {
       res.render("update-book", { book: book, title: book.title });
     } else {
-      res.sendStatus(404);
+      res.render("error");
     }
   })
 );
 
-// Update Book (Write to database)
+// Update Book (write to database) * * Working * *
 app.post(
   "/books/:id",
   asyncHandler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
-    // this line doesnt work
-    const x = await book.update(req.body);
-    // this line works
-    // const x = await book.update({ title: "Emma" });
-    res.redirect("/books/" + book.id);
-    // res.send(x);
+    await book.update(req.body);
+    res.redirect("/books/");
   })
 );
 
-// Delete Book (Delete from database)
+// Delete Book from Database * * Working * *
+app.post(
+  "/books/:id/delete",
+  asyncHandler(async (req, res) => {
+    const book = await Book.findByPk(req.params.id);
+    await book.destroy();
+    res.redirect("/books");
+  })
+);
 
 // =============== error handler ===============
-// set error
+// Set error
 app.use((req, res, next) => {
   const err = new Error("Cannot find that... sorry");
   err.status = 404;
   next(err);
 });
 
-// render error page
+// Render error page
 app.use((err, req, res, next) => {
   err.status = err.status || 500;
   res.locals.error = err;
   res.status(err.status);
-  res.render("error", { title: "Error!" });
+  res.render("page-not-found", { title: "Error!" });
   console.log("Error: " + err.status + " " + err.message);
 });
 
@@ -123,6 +118,7 @@ const server = app.listen(3000, () => {
 });
 
 // =======================================================
+// function to timestamp sever message
 function showTime() {
   const now = new Date();
   let hour = now.getHours();
@@ -135,13 +131,16 @@ function showTime() {
 }
 
 // ========================================================
-/* Handler function to wrap each route. */
+/* Handler function to wrap each route. 
+    with Sequelize Validation Friendly Message*/
 function asyncHandler(cb) {
   return async (req, res, next) => {
     try {
       await cb(req, res, next);
     } catch (error) {
-      res.status(500).send(error);
+      if (error.name === "SequelizeValidationError") {
+        res.render("invalid");
+      }
     }
   };
 }

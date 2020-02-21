@@ -11,10 +11,10 @@ block content
         th Genre 
         th Year 
       tbody 
-      each val, id in books
+      each book in books
         tr  
           td 
-            a(href="/books/"+(id+1)) #{books[id].title}
-          td #{books[id].author}
-          td #{books[id].genre}
-          td #{books[id].year}
+            a(href="/books/"+(book.id)) #{book.title}
+          td #{book.author}
+          td #{book.genre}
+          td #{book.year}

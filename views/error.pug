@@ -2,11 +2,10 @@ extends layout
 
 block content
   h1 ¯\_(ツ)_/¯
-  h1= error.message
-  h4 We looked everywhere, but no... we suspect user error, tbh
+  h1 No such book
+  h4 We're not sure what went wrong...
   .error
-    h2 Error #{error.status} - File Not Found
-    pre Try the back button... that usually helps.
-    pre= error.stack
+    h2 Error: Requested Book Not Found
+    pre Click the Home button to return to the main page.
   a.button(href="/") Home
   h5 This message brought to you by error.pug

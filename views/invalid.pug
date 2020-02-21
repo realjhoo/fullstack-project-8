@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 ¯\_(ツ)_/¯
+  h1 The "Title" and "Author" field are required!
+  h4 Please try again
+  .error
+    h2 Error: Required data invalid or missing
+    pre Click the Go Back button to return to the form page.
+  a.button(onclick="window.history.go(-1)") Go Back
+  h5 This message brought to you by invalid.pug

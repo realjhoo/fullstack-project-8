@@ -1,6 +1,13 @@
 extends layout
 
 block content
-  h1 page-not-found.pug
-  h2 this page never appears
-  h2 need to fix that
+  h1 ¯\_(ツ)_/¯
+  h1= error.message
+  h4 We looked everywhere, but no... we suspect user error, tbh
+  .error
+    h2 Error #{error.status} - File Not Found
+    pre Try the back button... that usually helps.
+    pre Or, click the Home button at the bottom of this message.
+    pre= error.stack
+  a.button(href="/") Home
+  h5 This message brought to you by page-not-found.pug
