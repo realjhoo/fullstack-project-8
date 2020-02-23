@@ -1,9 +1,18 @@
 extends layout
 
 block content
-  h1 Books
-  p 
+  h1 #{items} Books Found
+  - let firstItem = page * 10 - 10
+  - let lastItem = firstItem + 10
+    p 
     a.button(href="/books/new") Create New Book
+  if page === 1
+    p
+    a.button(href="/page/2") Next Page
+  else
+    p
+    a.button(href="/") Prev Page
+  p
     table
       thead 
         th Title
@@ -13,8 +22,10 @@ block content
       tbody 
       each book in books
         tr  
-          td 
-            a(href="/books/"+(book.id)) #{book.title}
-          td #{book.author}
-          td #{book.genre}
-          td #{book.year}
+          if book.id > firstItem && book.id <= lastItem 
+            td 
+              a(href="/books/"+(book.id)) #{book.title}
+            td #{book.author}
+            td #{book.genre}
+            td #{book.year}
+          

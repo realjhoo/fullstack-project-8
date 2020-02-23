@@ -33,7 +33,9 @@ app.get(
       res.render("index", {
         books: books,
         id: books.id,
-        title: "SQL Library Manager"
+        title: "SQL Library Manager",
+        items: books.length,
+        page: 1
       });
     } else {
       res.sendStatus(404);
@@ -45,6 +47,25 @@ app.get(
 app.get("/books", (req, res) => {
   res.redirect("/");
 });
+
+// pagination hack
+app.get(
+  "/page/:pg",
+  asyncHandler(async (req, res) => {
+    const books = await Book.findAll();
+    if (books) {
+      res.render("index", {
+        books: books,
+        id: books.id,
+        title: "SQL Library Manager",
+        items: books.length,
+        page: 2
+      });
+    } else {
+      res.sendStatus(404);
+    }
+  })
+);
 
 // New Book Route * * Working * *
 app.get("/books/new", (req, res) => {
@@ -143,4 +164,9 @@ function asyncHandler(cb) {
       }
     }
   };
+}
+
+// ========================================================
+function bob() {
+  console.log("Bob's your uncle");
 }
