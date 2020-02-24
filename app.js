@@ -3,9 +3,11 @@
 const express = require("express");
 const db = require("./db");
 const { Book } = require("./db").models;
+const Sequelize = require("sequelize");
 
 // Variables and Constants
 const app = express();
+const Op = Sequelize.Op;
 
 // app set and use
 app.set("view engine", "pug");
@@ -47,6 +49,29 @@ app.get(
 app.get("/books", (req, res) => {
   res.redirect("/");
 });
+
+// Search Route
+// *************** IN PROGRESS *************
+app.post(
+  "/",
+  asyncHandler(async (req, res) => {
+    let searchTerm = req.body.searchTerm.toLowerCase();
+    console.log("Search Term: " + searchTerm);
+
+    const books = await Book.findAll({
+      where: {
+        [Op.or]: {
+          title: {
+            [Op.like]: `%${searchTerm}%`
+          }
+        }
+      }
+    });
+    for (let i = 0; i < books.length; i++) {
+      console.log("Search :" + books[i].title);
+    }
+  })
+);
 
 // pagination hack
 app.get(

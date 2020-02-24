@@ -115,3 +115,10 @@ hr {
   color: #019875;
   margin: auto;
 }
+
+input.searchButton {
+  margin-left: 0.5rem;
+  background-image: "../search.svg";
+  background-repeat: no-repeat;
+  background-position: right;
+}
