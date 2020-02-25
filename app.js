@@ -35,9 +35,10 @@ app.get(
       res.render("index", {
         books: books,
         id: books.id,
-        title: "SQL Library Manager",
+        windowTitle: "SQL Library Manager",
         items: books.length,
-        page: 1
+        page: 1,
+        search: false
       });
     } else {
       res.sendStatus(404);
@@ -57,21 +58,51 @@ app.post(
   asyncHandler(async (req, res) => {
     let searchTerm = req.body.searchTerm.toLowerCase();
     console.log("Search Term: " + searchTerm);
-
     const books = await Book.findAll({
       where: {
         [Op.or]: {
           title: {
             [Op.like]: `%${searchTerm}%`
+          },
+          author: {
+            [Op.like]: `%${searchTerm}%`
+          },
+          genre: {
+            [Op.like]: `%${searchTerm}%`
+          },
+          year: {
+            [Op.like]: `%${searchTerm}%`
           }
         }
       }
     });
+
     for (let i = 0; i < books.length; i++) {
       console.log("Search :" + books[i].title);
+      console.log(req.query.page);
+      // +++++++++++++++++++++
+      // const itemsPerPage = 10;
+      // const numOfPages = Math.ceil(items / itemsPerPage);
+      // let firstItem = page * 10 - 10;
+      // let lastItem = firstItem + 10;
+      // ++++++++++++++++++++++
+
+      res.render("index", {
+        books: books,
+        id: books.id,
+        windowTitle: "SQL Library Manager",
+        items: books.length,
+        page: 1,
+        search: true
+      });
     }
   })
 );
+
+// TESTING ========================
+// app.get("/search", (req, res) => {
+//   res.render("search");
+// });
 
 // pagination hack
 app.get(
@@ -82,7 +113,7 @@ app.get(
       res.render("index", {
         books: books,
         id: books.id,
-        title: "SQL Library Manager",
+        windowTitle: "SQL Library Manager",
         items: books.length,
         page: 2
       });
@@ -94,7 +125,7 @@ app.get(
 
 // New Book Route * * Working * *
 app.get("/books/new", (req, res) => {
-  res.render("new-book", { title: "New Book" });
+  res.render("new-book", { windowTitle: "New Book" });
 });
 
 // Write new book to DB * * Working * *
@@ -152,7 +183,7 @@ app.use((err, req, res, next) => {
   err.status = err.status || 500;
   res.locals.error = err;
   res.status(err.status);
-  res.render("page-not-found", { title: "Error!" });
+  res.render("page-not-found", { windowTitle: "Error!" });
   console.log("Error: " + err.status + " " + err.message);
 });
 

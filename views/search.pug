@@ -1,26 +1,19 @@
 extends layout
 
 block content
-  if search === true
-    if items > 1
-      h1 #{items} Books Found
-    else 
-      h1 #{items} Book Found
-  else
-    h1 Books
-
-  - const itemsPerPage = 10
-  - const numOfPages = Math.ceil(items/itemsPerPage)
+  
+  h1 Searcg Results
+  h1 #{items} Books
   - let firstItem = page * 10 - 10
   - let lastItem = firstItem + 10
     
-  a.button(href="/books/new") Create New Book
+    a.button(href="/books/new") Create New Book
   if page === 1
     p
     a.button(href="/page/2") Next Page
   else
     p
-    a.button(href="/page/1") Prev Page
+    a.button(href="/") Prev Page
   p
   form(method="post" action="/" )
     input(type="text" name="searchTerm" placeholder="Search...")
@@ -41,11 +34,4 @@ block content
           td #{book.author}
           td #{book.genre}
           td #{book.year}
-  p
-  if search === true
-    a.button(href="/") Home
-  - let i = 1;
-  while i <= 2
-    a.button(href="/page/"+i) #{i}
-    - i++
-  h5 index.pug
+          h5 This message brought to you by search.pug
