@@ -4,6 +4,7 @@ const express = require("express");
 const db = require("./db");
 const { Book } = require("./db").models;
 const Sequelize = require("sequelize");
+const booksPerPage = 5;
 
 // Variables and Constants
 const app = express();
@@ -57,7 +58,9 @@ app.post(
   "/",
   asyncHandler(async (req, res) => {
     let searchTerm = req.body.searchTerm.toLowerCase();
+    console.log("******************************************");
     console.log("Search Term: " + searchTerm);
+
     const books = await Book.findAll({
       where: {
         [Op.or]: {
@@ -77,45 +80,49 @@ app.post(
       }
     });
 
+    // Log Out Search Results (dev)
     for (let i = 0; i < books.length; i++) {
       console.log("Search :" + books[i].title);
-      console.log(req.query.page);
-      // +++++++++++++++++++++
-      // const itemsPerPage = 10;
-      // const numOfPages = Math.ceil(items / itemsPerPage);
-      // let firstItem = page * 10 - 10;
-      // let lastItem = firstItem + 10;
-      // ++++++++++++++++++++++
-
-      res.render("index", {
-        books: books,
-        id: books.id,
-        windowTitle: "SQL Library Manager",
-        items: books.length,
-        page: 1,
-        search: true
-      });
     }
+
+    // pagination constants
+    const numOfPages = Math.ceil(books.length / booksPerPage);
+    let currentPage = 1;
+
+    // render the search page
+    res.render("index", {
+      books: books,
+      id: books.id,
+      windowTitle: "SQL Library Manager",
+      items: books.length,
+      pages: numOfPages,
+      currentPage: currentPage,
+      search: true
+    });
   })
 );
 
-// TESTING ========================
-// app.get("/search", (req, res) => {
-//   res.render("search");
-// });
-
-// pagination hack
+// Pagination Route
 app.get(
   "/page/:pg",
   asyncHandler(async (req, res) => {
     const books = await Book.findAll();
+
+    // Pagination Math
+    const numOfPages = Math.ceil(books.length / booksPerPage);
+    let currentPage = req.params.pg;
+    const firstBook = currentPage * booksPerPage - booksPerPage;
+
     if (books) {
       res.render("index", {
         books: books,
         id: books.id,
         windowTitle: "SQL Library Manager",
         items: books.length,
-        page: 2
+        pages: numOfPages,
+        currentPage: currentPage,
+        firstBook: firstBook,
+        search: true
       });
     } else {
       res.sendStatus(404);
