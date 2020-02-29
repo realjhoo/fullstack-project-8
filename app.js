@@ -4,7 +4,7 @@ const express = require("express");
 const db = require("./db");
 const { Book } = require("./db").models;
 const Sequelize = require("sequelize");
-const booksPerPage = 5;
+const booksPerPage = 10;
 
 // Variables and Constants
 const app = express();
@@ -31,14 +31,17 @@ app.use(express.urlencoded({ extended: false }));
 app.get(
   "/",
   asyncHandler(async (req, res) => {
-    const books = await Book.findAll();
+    const totBooks = await Book.findAll();
+    const books = await Book.findAll({ limit: booksPerPage });
+
+    const numOfPages = Math.ceil(totBooks.length / booksPerPage);
+
     if (books) {
       res.render("index", {
         books: books,
-        id: books.id,
         windowTitle: "SQL Library Manager",
         items: books.length,
-        page: 1,
+        pages: numOfPages,
         search: false
       });
     } else {
@@ -61,6 +64,9 @@ app.post(
     console.log("******************************************");
     console.log("Search Term: " + searchTerm);
 
+    const totBooks = await Book.findAll();
+    const numOfPages = Math.ceil(totBooks.length / booksPerPage);
+
     const books = await Book.findAll({
       where: {
         [Op.or]: {
@@ -81,22 +87,15 @@ app.post(
     });
 
     // Log Out Search Results (dev)
-    for (let i = 0; i < books.length; i++) {
-      console.log("Search :" + books[i].title);
-    }
-
-    // pagination constants
-    const numOfPages = Math.ceil(books.length / booksPerPage);
-    let currentPage = 1;
+    //    for (let i = 0; i < books.length; i++) {
+    //      console.log("Search :" + books[i].title);
+    //    }
 
     // render the search page
     res.render("index", {
       books: books,
-      id: books.id,
       windowTitle: "SQL Library Manager",
       items: books.length,
-      pages: numOfPages,
-      currentPage: currentPage,
       search: true
     });
   })
@@ -106,23 +105,23 @@ app.post(
 app.get(
   "/page/:pg",
   asyncHandler(async (req, res) => {
-    const books = await Book.findAll();
+    const totBooks = await Book.findAll();
+    const books = await Book.findAll({
+      offset: req.params.pg * booksPerPage - booksPerPage,
+      limit: booksPerPage
+    });
 
     // Pagination Math
-    const numOfPages = Math.ceil(books.length / booksPerPage);
-    let currentPage = req.params.pg;
-    const firstBook = currentPage * booksPerPage - booksPerPage;
+    const numOfPages = Math.ceil(totBooks.length / booksPerPage);
 
+    //  Render the page
     if (books) {
       res.render("index", {
         books: books,
-        id: books.id,
         windowTitle: "SQL Library Manager",
         items: books.length,
         pages: numOfPages,
-        currentPage: currentPage,
-        firstBook: firstBook,
-        search: true
+        search: false
       });
     } else {
       res.sendStatus(404);
@@ -135,7 +134,7 @@ app.get("/books/new", (req, res) => {
   res.render("new-book", { windowTitle: "New Book" });
 });
 
-// Write new book to DB * * Working * *
+// Write New Book to Database * * Working * *
 app.post(
   "/books/new",
   asyncHandler(async (req, res) => {
@@ -227,9 +226,4 @@ function asyncHandler(cb) {
       }
     }
   };
-}
-
-// ========================================================
-function bob() {
-  console.log("Bob's your uncle");
 }
