@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1 Update Book 
+  h1 Update #{book.title}
   form(action="/books/" + book.id, method="post")
     p
       label(for="title") Title
@@ -25,4 +25,4 @@ block content
     input(type="submit" value="Delete Book")
     br
     br
-    h5 this is update-book.pug
+    h5 update-book.pug

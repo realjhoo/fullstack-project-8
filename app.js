@@ -61,11 +61,6 @@ app.post(
   "/",
   asyncHandler(async (req, res) => {
     let searchTerm = req.body.searchTerm.toLowerCase();
-    console.log("******************************************");
-    console.log("Search Term: " + searchTerm);
-
-    const totBooks = await Book.findAll();
-    const numOfPages = Math.ceil(totBooks.length / booksPerPage);
 
     const books = await Book.findAll({
       where: {
@@ -85,11 +80,6 @@ app.post(
         }
       }
     });
-
-    // Log Out Search Results (dev)
-    //    for (let i = 0; i < books.length; i++) {
-    //      console.log("Search :" + books[i].title);
-    //    }
 
     // render the search page
     res.render("index", {

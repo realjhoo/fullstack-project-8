@@ -127,3 +127,7 @@ input.searchButton {
 .pagination {
   margin-right: 12px;
 }
+
+h5 {
+  color: #fff;
+}
